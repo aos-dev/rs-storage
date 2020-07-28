@@ -1,0 +1,11 @@
+[package]
+name = "storage-rs"
+version = "0.1.0"
+authors = ["Xuanwo <github@xuanwo.io>"]
+edition = "2018"
+description = "An application-oriented unified storage layer for Rust"
+license = "Apache-2.0"
+
+[dependencies]
+tokio = { version = "^0.2", features = ["fs"] }
+async-trait = "0.1.36"
