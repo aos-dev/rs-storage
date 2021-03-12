@@ -25,8 +25,8 @@ pub trait Storager {
     fn list(&self, path: &str, pairs: &[Pair]) -> Result<ObjectIterator>;
     fn delete(&self, path: &str, pairs: &[Pair]) -> Result<()>;
     fn stat(&self, path: &str, pairs: &[Pair]) -> Result<Object>;
-    fn read(&self, path: &str, w: &mut impl io::Write, pairs: &[Pair]) -> Result<i64>;
-    fn write(&self, path: &str, r: &mut impl io::Read, size: i64, pairs: &[Pair]) -> Result<i64>;
+    fn read(&self, path: &str, w: &mut dyn io::Write, pairs: &[Pair]) -> Result<i64>;
+    fn write(&self, path: &str, r: &mut dyn io::Read, size: i64, pairs: &[Pair]) -> Result<i64>;
 }
 
 pub struct Interceptor {}

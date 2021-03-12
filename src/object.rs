@@ -23,20 +23,11 @@ bitflags! {
     }
 }
 
-#[derive(Clone)]
+#[derive(Default)]
 pub struct Object {
-    o: super::internal::Object,
+    pub o: super::internal::Object,
 
-    pub stater: Option<Box<fn()>>,
-}
-
-impl Default for Object {
-    fn default() -> Self {
-        Object {
-            o: super::internal::Object::default(),
-            stater: None,
-        }
-    }
+    pub stated: Option<Box<dyn Storager>>,
 }
 
 impl Debug for Object {
@@ -63,7 +54,7 @@ impl Object {
     pub fn new() -> Object {
         Object {
             o: super::internal::Object::default(),
-            stater: None,
+            stated: None,
         }
     }
 }
