@@ -25,9 +25,9 @@ bitflags! {
 
 #[derive(Default)]
 pub struct Object {
-    pub o: super::internal::Object,
+    o: super::internal::Object,
 
-    pub stated: Option<Box<dyn Storager>>,
+    store: Option<Box<dyn Storager>>,
 }
 
 impl Debug for Object {
@@ -51,16 +51,16 @@ impl DerefMut for Object {
 }
 
 impl Object {
-    pub fn new() -> Object {
+    pub fn new(store: Box<dyn Storager>) -> Object {
         Object {
             o: super::internal::Object::default(),
-            stated: None,
+            store: Some(store),
         }
     }
 }
 
 pub struct ObjectIterator {
-    pub o: Object,
+    o: Object,
 }
 
 impl Iterator for ObjectIterator {
