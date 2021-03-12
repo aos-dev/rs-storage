@@ -1,50 +1,38 @@
 use std::error;
 use std::fmt;
-use std::path::Path;
+use std::fmt::Debug;
+use std::io;
+use std::io::{Read, Write};
+use std::path::{Iter, Path};
 
-use tokio::io;
+use thiserror::Error;
 
-use async_trait::async_trait;
+mod internal;
+mod object;
 
-mod fs;
+pub use internal::Pair;
+pub use object::{Object, ObjectIterator, ObjectMode};
 
-#[derive(Debug)]
-enum Error {
-    Io(io::Error),
+#[derive(Error, Debug)]
+pub enum Error {
+    #[error("io error")]
+    Io(#[from] io::Error),
 }
 
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::Io(ref err) => write!(f, "IO: {}", err),
-        }
-    }
+pub type Result<T> = std::result::Result<T, Error>;
+
+pub trait Storager {
+    fn list(&self, path: &str, pairs: &[Pair]) -> Result<ObjectIterator>;
+    fn delete(&self, path: &str, pairs: &[Pair]) -> Result<()>;
+    fn stat(&self, path: &str, pairs: &[Pair]) -> Result<Object>;
+    fn read(&self, path: &str, w: &mut impl io::Write, pairs: &[Pair]) -> Result<i64>;
+    fn write(&self, path: &str, r: &mut impl io::Read, size: i64, pairs: &[Pair]) -> Result<i64>;
 }
 
-impl error::Error for Error {
-    fn cause(&self) -> Option<&dyn error::Error> {
-        match *self {
-            Error::Io(ref err) => Some(err),
-        }
-    }
-}
+pub struct Interceptor {}
 
-impl From<std::io::Error> for Error {
-    fn from(err: io::Error) -> Error {
-        Error::Io(err)
-    }
-}
+pub struct IoCallback {}
 
-type Result<T> = std::result::Result<T, Error>;
+pub struct ListMode {}
 
-#[async_trait]
-trait Storager {
-    async fn stat(&self, path: &Path);
-    async fn delete(&self, path: &Path) -> Result<()>;
-    async fn read(&self, path: &Path) -> Result<Box<dyn tokio::io::AsyncRead + Unpin>>;
-    async fn write<R: io::AsyncRead + Unpin + Send + Sync>(
-        &self,
-        path: &Path,
-        r: &mut R,
-    ) -> Result<()>;
-}
+pub struct PairPolicy {}

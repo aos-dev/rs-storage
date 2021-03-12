@@ -9,3 +9,15 @@ license = "Apache-2.0"
 [dependencies]
 tokio = { version = "^0.2", features = ["fs"] }
 async-trait = "0.1.36"
+thiserror = "1.0.23"
+bitflags = "1.2.1"
+chrono = "0.4.19"
+
+[build-dependencies]
+definitions = { path = "components/definitions" }
+
+
+[workspace]
+members = [
+    "components/definitions",
+]

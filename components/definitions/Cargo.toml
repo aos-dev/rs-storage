@@ -1,0 +1,14 @@
+[package]
+name = "definitions"
+version = "0.1.0"
+authors = ["Xuanwo <github@xuanwo.io>"]
+edition = "2018"
+description = "AOS definitions code generator"
+license = "Apache-2.0"
+
+[dependencies]
+anyhow = "1.0.38"
+aos-specs = { git = "https://github.com/aos-dev/specs" }
+codegen = "0.1.3"
+heck = "0.3.2"
+lazy_static = "1.4.0"
